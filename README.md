@@ -1,6 +1,8 @@
 # DOTFILES
 Clone this repo and then create a symlink from it to the .vimrc file:
+```
 ln ~/DOTFILES/.vimrc ~/.vimrc
+```
 
 For nvim to use .vimrc copy the following code to ~/.config/nvim/init.vim
 ```
