@@ -12,7 +12,7 @@ set undofile
 set incsearch
 set statusline+=%F
 
-set clipboard=unnamed
+set clipboard=unnamedplus
 
 " turn hybrid line numbers on
 set number relativenumber
@@ -24,7 +24,8 @@ set colorcolumn=80
 highlight ColorColumn ctermbg=0 guibg=lightgrey        
 
 call plug#begin('~/.vim/plugged')
-
+Plug 'szw/vim-maximizer'
+Plug 'tpope/vim-surround'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'davidhalter/jedi-vim'
 Plug 'liuchengxu/vista.vim' 
@@ -45,6 +46,7 @@ Plug 'jalvesaq/vimcmdline'
 Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'vim-airline/vim-airline'
 call plug#end()
 
 colorscheme gruvbox
@@ -57,9 +59,26 @@ endif
 
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
-let g:ctrlp_user_command = ['.git', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 let mapleader = "\<space>"
 let maplocalleader = "\\" 
+
+"disable arrow keys in non-insert mode 
+noremap <Up> <Nop>
+noremap <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
+
+"fzf shortcuts
+noremap <leader>f :Files<CR> 
+noremap <leader>b :Buffers<CR> 
+noremap <leader>w :Windows<CR> 
+
+"vim-maximizer
+nnoremap <silent><leader>mm :MaximizerToggle<CR>
+vnoremap <silent><leader>mm :MaximizerToggle<CR>gv
+inoremap <silent><leader>mm <C-o>:MaximizerToggle<CR>
+
+let g:ctrlp_user_command = ['.git', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 let g:netrw_browse_split=2
 let g:netrw_banner = 0
 let g:netrw_winsize = 25
@@ -174,8 +193,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+xmap <leader>ff  <Plug>(coc-format-selected)
+nmap <leader>ff  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
