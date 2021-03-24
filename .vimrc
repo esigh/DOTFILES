@@ -78,6 +78,12 @@ nnoremap <silent><leader>mm :MaximizerToggle<CR>
 vnoremap <silent><leader>mm :MaximizerToggle<CR>gv
 inoremap <silent><leader>mm <C-o>:MaximizerToggle<CR>
 
+" Enable the list of buffers
+let g:airline#extensions#tabline#enabled = 1
+" Show just the filename
+let g:airline#extensions#tabline#fnamemod = ':t'
+
+
 let g:ctrlp_user_command = ['.git', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
 let g:netrw_browse_split=2
 let g:netrw_banner = 0
@@ -108,6 +114,25 @@ nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
 
 tnoremap <Esc> <C-\><C-n>
+
+"  this are  from https://joshldavis.com/2014/04/05/vim-tab-madness-buffers-vs-tabs/
+" This allows buffers to be hidden if you've modified a buffer.
+" This is almost a must if you wish to use buffers in this way.
+set hidden
+" To open a new empty buffer
+" This replaces :tabnew which I used to bind to this mapping
+nmap <leader>B :enew<cr>
+" Move to the next buffer
+nmap <leader>l :bnext<CR>
+" Move to the previous buffer
+nmap <leader>h :bprevious<CR>
+" Close the current buffer and move to the previous one
+" This replicates the idea of closing a tab
+nmap <leader>bq :bp <BAR> bd #<CR>
+" Show all open buffers and their status
+" I like to use :Buffers from fzf package instead of this
+" nmap <leader>bl :ls<CR>
+
 
 " all bellow are for coc
 " TextEdit might fail if hidden is not set.
