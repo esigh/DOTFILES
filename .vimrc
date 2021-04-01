@@ -38,7 +38,7 @@ Plug 'jremmen/vim-ripgrep'
 Plug 'tpope/vim-fugitive'
 Plug 'leafgarland/typescript-vim'
 Plug 'vim-utils/vim-man'
-Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
+" Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
 Plug 'mbbill/undotree'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpict/vim-ftplugin-python'
@@ -47,6 +47,11 @@ Plug 'junegunn/seoul256.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'vim-airline/vim-airline'
+Plug 'tpope/vim-dadbod'
+Plug 'kristijanhusak/vim-dadbod-ui'
+Plug 'junegunn/limelight.vim'
+Plug 'mhinz/vim-startify'            " A start menu for vim
+Plug 'fisadev/vim-isort'             " Python sort imports [dep]: pip3 install isort
 call plug#end()
 
 colorscheme gruvbox
@@ -54,50 +59,84 @@ set background=dark
 
 
 if executable('rg')
+    " execute('echo "here"')
     let g:rg_derive_root='true'
+    let g:FZF_DEFAULT_COMMAND='rg --files'
+    let g:FZF_DEFAULT_OPTS='--multi --height 50% --border --extended'
+    "Side note: FZF.vim :Rg option also searches for file name in addition to the phrase
+    "https://dev.to/iggredible/how-to-search-faster-in-vim-with-fzf-vim-36ko
+    command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
+    " Vim allows us to change the program used by :grep. We can tell Vim to use ripgrep instead of grep by adding this inside our vimrc
+    set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 endif
 
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
+" Color name (:help cterm-colors) or ANSI code
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_ctermfg = 240
+
+
 let mapleader = "\<space>"
 let maplocalleader = "\\" 
 
-"disable arrow keys in non-insert mode 
-noremap <Up> <Nop>
-noremap <Down> <Nop>
-noremap <Left> <Nop>
-noremap <Right> <Nop>
+"easy escape in normal
+inoremap jk <Esc>
+"similar thing in terminal mode
+tnoremap jk <C-\><C-n>
+
+"also add Esp to get out of terminal
+tnoremap <Esc> <C-\><C-n>
+
+""disable arrow keys in non-insert mode 
+"" actually changed them to resize split windows
+" noremap <Up> <Nop>
+"noremap <Down> <Nop>
+"noremap <Left> <Nop>
+"noremap <Right> <Nop>
 
 "fzf shortcuts
-noremap <leader>f :Files<CR> 
-noremap <leader>b :Buffers<CR> 
-noremap <leader>w :Windows<CR> 
+noremap <leader>f :Files<CR>
+noremap <leader>b :Buffers<CR>
+noremap <leader>w :Windows<CR>
 
 "vim-maximizer
 nnoremap <silent><leader>mm :MaximizerToggle<CR>
 vnoremap <silent><leader>mm :MaximizerToggle<CR>gv
 inoremap <silent><leader>mm <C-o>:MaximizerToggle<CR>
 
+" Start terminals for Python sessions '\tr'
+map <Leader>tp :new term://bash<CR>ipython3<CR><C-\><C-n><C-w>k
+
 " Enable the list of buffers
-let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#enabled = 1
 " Show just the filename
-let g:airline#extensions#tabline#fnamemod = ':t'
+" :let g:airline#extensions#tabline#fnamemod = ':t'
 
 
-let g:ctrlp_user_command = ['.git', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-let g:netrw_browse_split=2
-let g:netrw_banner = 0
-let g:netrw_winsize = 25
+" let g:ctrlp_user_command = ['.git', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+" let g:netrw_browse_split=2
+" let g:netrw_banner = 0
+" let g:netrw_winsize = 25
+" let g:ctrlp_use_caching = 0
 
-let g:ctrlp_use_caching = 0
+" vim-isort 
+let g:vim_isort_map = '<C-i>i'
 
-let g:slime_target = "tmux"
-let g:slime_paste_file = "$HOME/.slime_paste"
 
-let g:slime_cell_delimiter = "#%%"
-nmap <leader>z <Plug>SlimeSendCell
-let g:slime_python_ipython = 1                                                     
+" let g:slime_target = "tmux"
+" let g:slime_paste_file = "$HOME/.slime_paste"
 
+" let g:slime_cell_delimiter = "#%%"
+" nmap <leader>z <Plug>SlimeSendCell
+" let g:slime_python_ipython = 1                                                     
+
+" startify
+let g:startify_lists = [
+      \ { 'type': 'sessions',  'header': ['   Sessions']       },
+      \ { 'type': 'files',     'header': ['   Recent']            },
+      \ { 'type': 'commands',  'header': ['   Commands']       },
+      \ ]
 
 let cmdline_term_height = 15
 "let g:cmdline_in_buffer = 0
@@ -107,13 +146,23 @@ let cmdline_app           = {}
 let cmdline_app['python']     = 'ipython'
 
 let NERDTreeShowHidden=0
-
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
 
-tnoremap <Esc> <C-\><C-n>
+" Make adjusing split sizes a bit more friendly
+noremap <silent> <Right> :vertical resize +3<CR>
+noremap <silent> <Left> :vertical resize -3<CR>
+noremap <silent> <Up> :resize -3<CR>
+noremap <silent> <Down> :resize +3<CR>
+" Change 2 split windows from vert to horiz or horiz to vert
+map <Leader>th <C-w>t<C-w>H
+map <Leader>tk <C-w>t<C-w>K
+" Start terminals for Python sessions '\tr'
+" this is useless actually, since it doesn't load the env variables
+" automatically
+map <Leader>tp :new term://bash<CR>ipython3<CR><C-\><C-n><C-w>k
 
 "  this are  from https://joshldavis.com/2014/04/05/vim-tab-madness-buffers-vs-tabs/
 " This allows buffers to be hidden if you've modified a buffer.
