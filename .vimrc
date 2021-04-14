@@ -51,7 +51,12 @@ Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 Plug 'junegunn/limelight.vim'
 Plug 'mhinz/vim-startify'            " A start menu for vim
-Plug 'fisadev/vim-isort'             " Python sort imports [dep]: pip3 install isort
+Plug 'fisadev/vim-isort'             " Python sort impcrts [dep]: pip3 install isort
+Plug 'easymotion/vim-easymotion'
+Plug 'airblade/vim-gitgutter'        " shows git changes in gutter
+Plug 'goerz/jupytext.vim'
+Plug 'untitled-ai/jupyter_ascending.vim'
+Plug 'airblade/vim-rooter'
 call plug#end()
 
 colorscheme gruvbox
@@ -80,6 +85,10 @@ let g:limelight_conceal_ctermfg = 240
 let mapleader = "\<space>"
 let maplocalleader = "\\" 
 
+" vim-rooter: what pattern to use to find the root project directory:
+" to specify the root has a certain directory or file (which may be a glob), just give the name:
+let g:rooter_patterns = ['env/']
+
 "easy escape in normal
 inoremap jk <Esc>
 "similar thing in terminal mode
@@ -87,6 +96,27 @@ tnoremap jk <C-\><C-n>
 
 "also add Esp to get out of terminal
 tnoremap <Esc> <C-\><C-n>
+
+" Minimal but useful vimrc example (directly from https://github.com/easymotion/vim-easymotion):
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+" `s{char}{label}`
+nmap s <Plug>(easymotion-overwin-f)
+" or
+" `s{char}{char}{label}`
+" Need one more keystroke, but on average, it may be more comfortable.
+" nmap s <Plug>(easymotion-overwin-f2)
+" Turn on case-insensitive feature
+let g:EasyMotion_smartcase = 1
+" JK motions: Line motions
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+
+" jupytext.vim options
+let g:jupytext_fmt = 'py:percent'
+
+" jupyter_ascending
+nmap <space><space>x <Plug>JupyterExecute
 
 ""disable arrow keys in non-insert mode 
 "" actually changed them to resize split windows
@@ -122,6 +152,10 @@ map <Leader>tp :new term://bash<CR>ipython3<CR><C-\><C-n><C-w>k
 
 " vim-isort 
 let g:vim_isort_map = '<C-i>i'
+
+" gitgutter
+let g:gitgutter_async=0
+set updatetime=100              " set update time for gitgutter update
 
 
 " let g:slime_target = "tmux"
@@ -264,7 +298,8 @@ endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
+" nmap <leader>rn <Plug>(coc-rename) "warning: only changes in the open buffers
+nnoremap <leader>rn :CocSearch <C-R>=expand("<cword>")<CR><CR>
 
 " Formatting selected code.
 xmap <leader>ff  <Plug>(coc-format-selected)
