@@ -11,7 +11,7 @@ set undodir=~/.vim/undodir
 set undofile
 set incsearch
 set statusline+=%F
-
+set scrolloff=9 " cursor  always in the middle of the screen except towards the start or end of the file
 set clipboard=unnamedplus
 
 " turn hybrid line numbers on
@@ -20,7 +20,7 @@ set nu rnu
 
 set backspace=indent,eol,start
 
-set colorcolumn=80
+set colorcolumn=120
 highlight ColorColumn ctermbg=0 guibg=lightgrey        
 
 call plug#begin('~/.vim/plugged')
@@ -61,19 +61,31 @@ call plug#end()
 
 colorscheme gruvbox
 set background=dark
-
+set cursorline
 
 if executable('rg')
     " execute('echo "here"')
     let g:rg_derive_root='true'
     let g:FZF_DEFAULT_COMMAND='rg --files'
-    let g:FZF_DEFAULT_OPTS='--multi --height 50% --border --extended'
     "Side note: FZF.vim :Rg option also searches for file name in addition to the phrase
     "https://dev.to/iggredible/how-to-search-faster-in-vim-with-fzf-vim-36ko
-    command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
+    " command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
+    
+    " Get text in files with Rg (https://www.chrisatmachine.com/Neovim/08-fzf/)
+    command! -bang -nargs=* Rg
+      \ call fzf#vim#grep(
+      \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+      \   fzf#vim#with_preview(), <bang>0)
+    command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
     " Vim allows us to change the program used by :grep. We can tell Vim to use ripgrep instead of grep by adding this inside our vimrc
     set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 endif
+
+" fzf setting from https://www.chrisatmachine.com/Neovim/08-fzf/
+let g:fzf_layout = {'up':'~90%', 'window': { 'width': 0.8, 'height': 0.8,'yoffset':0.5,'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp' } }
+let $FZF_DEFAULT_OPTS = '--layout=reverse --info=inline'
+" let g:FZF_DEFAULT_OPTS='--multi --height 50% --border --extended'
 
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
@@ -97,6 +109,10 @@ tnoremap jk <C-\><C-n>
 "also add Esp to get out of terminal
 tnoremap <Esc> <C-\><C-n>
 
+"shortcut to open and source vimrc
+nnoremap <leader>ev :vsplit ~/.vimrc<cr>
+nnoremap <leader>sv :source ~/.vimrc<cr>
+
 " Minimal but useful vimrc example (directly from https://github.com/easymotion/vim-easymotion):
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
@@ -116,7 +132,8 @@ map <Leader>k <Plug>(easymotion-k)
 let g:jupytext_fmt = 'py:percent'
 
 " jupyter_ascending
-nmap <space><space>x <Plug>JupyterExecute
+nmap <space>x :w<CR><Plug>JupyterExecute:/# %%<CR>
+imap <space>x <Esc>:w<CR><Plug>JupyterExecute:/# %%<CR>
 
 ""disable arrow keys in non-insert mode 
 "" actually changed them to resize split windows
