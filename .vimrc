@@ -11,7 +11,7 @@ set undodir=~/.vim/undodir
 set undofile
 set incsearch
 set statusline+=%F
-
+set scrolloff=9 " cursor  always in the middle of the screen except towards the start or end of the file
 set clipboard=unnamedplus
 
 " turn hybrid line numbers on
@@ -20,7 +20,11 @@ set nu rnu
 
 set backspace=indent,eol,start
 
-set colorcolumn=80
+" highlight training whitespaces: https://stackoverflow.com/questions/4617059/showing-trailing-spaces-in-vim
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+
+set colorcolumn=120
 highlight ColorColumn ctermbg=0 guibg=lightgrey        
 
 call plug#begin('~/.vim/plugged')
@@ -53,27 +57,41 @@ Plug 'junegunn/limelight.vim'
 Plug 'mhinz/vim-startify'            " A start menu for vim
 Plug 'fisadev/vim-isort'             " Python sort impcrts [dep]: pip3 install isort
 Plug 'easymotion/vim-easymotion'
+Plug 'tpope/vim-repeat'
 Plug 'airblade/vim-gitgutter'        " shows git changes in gutter
 Plug 'goerz/jupytext.vim'
 Plug 'untitled-ai/jupyter_ascending.vim'
 Plug 'airblade/vim-rooter'
+Plug 'puremourning/vimspector'
 call plug#end()
 
 colorscheme gruvbox
-set background=dark
-
+set background=dark  
+set cursorline
 
 if executable('rg')
     " execute('echo "here"')
     let g:rg_derive_root='true'
     let g:FZF_DEFAULT_COMMAND='rg --files'
-    let g:FZF_DEFAULT_OPTS='--multi --height 50% --border --extended'
     "Side note: FZF.vim :Rg option also searches for file name in addition to the phrase
     "https://dev.to/iggredible/how-to-search-faster-in-vim-with-fzf-vim-36ko
-    command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
+    " command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
+    
+    " Get text in files with Rg (https://www.chrisatmachine.com/Neovim/08-fzf/)
+    command! -bang -nargs=* Rg
+      \ call fzf#vim#grep(
+      \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+      \   fzf#vim#with_preview(), <bang>0)
+    command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
     " Vim allows us to change the program used by :grep. We can tell Vim to use ripgrep instead of grep by adding this inside our vimrc
     set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 endif
+
+" fzf setting from https://www.chrisatmachine.com/Neovim/08-fzf/
+let g:fzf_layout = {'up':'~90%', 'window': { 'width': 0.8, 'height': 0.8,'yoffset':0.5,'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp' } }
+let $FZF_DEFAULT_OPTS = '--layout=reverse --info=inline'
+" let g:FZF_DEFAULT_OPTS='--multi --height 50% --border --extended'
 
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
@@ -87,7 +105,7 @@ let maplocalleader = "\\"
 
 " vim-rooter: what pattern to use to find the root project directory:
 " to specify the root has a certain directory or file (which may be a glob), just give the name:
-let g:rooter_patterns = ['env/']
+let g:rooter_patterns = ['venv/']
 
 " easy save
 " nnoremap <c-s> :w<CR>
@@ -101,8 +119,14 @@ tnoremap jk <C-\><C-n>
 "also add Esp to get out of terminal
 tnoremap <Esc> <C-\><C-n>
 
+"shortcut to open and source vimrc
+nnoremap <leader>ev :vsplit ~/.vimrc<cr>
+nnoremap <leader>sv :source ~/.vimrc<cr>
+
 " Minimal but useful vimrc example (directly from https://github.com/easymotion/vim-easymotion):
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
+" Turn on case-insensitive feature
+" let g:EasyMotion_smartcase = 1
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
 " `s{char}{label}`
 nmap s <Plug>(easymotion-overwin-f)
@@ -110,17 +134,26 @@ nmap s <Plug>(easymotion-overwin-f)
 " `s{char}{char}{label}`
 " Need one more keystroke, but on average, it may be more comfortable.
 " nmap s <Plug>(easymotion-overwin-f2)
-" Turn on case-insensitive feature
-let g:EasyMotion_smartcase = 1
 " JK motions: Line motions
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
+" Require tpope/vim-repeat to enable dot repeat support
+" Bidirectional & within line 't' motion
+omap t <Plug>(easymotion-bd-tl)
+" Use uppercase target labels and type as a lower case
+let g:EasyMotion_use_upper = 1
+ " type `l` and match `l`&`L`
+let g:EasyMotion_smartcase = 1
+" Smartsign (type `3` and match `3`&`#`)
+let g:EasyMotion_use_smartsign_us = 1
 
 " jupytext.vim options
 let g:jupytext_fmt = 'py:percent'
 
 " jupyter_ascending
-nmap <space><space>x <Plug>JupyterExecute
+" nmap <space>x :w<CR><Plug>JupyterExecute:/# %%<CR>
+" imap <space>x <Esc>:w<CR><Plug>JupyterExecute:/# %%<CR>
+" let g:jupyter_ascending_match_pattern = '_sync.py'
 
 ""disable arrow keys in non-insert mode 
 "" actually changed them to resize split windows
