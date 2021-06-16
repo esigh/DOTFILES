@@ -20,6 +20,10 @@ set nu rnu
 
 set backspace=indent,eol,start
 
+" highlight training whitespaces: https://stackoverflow.com/questions/4617059/showing-trailing-spaces-in-vim
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+
 set colorcolumn=120
 highlight ColorColumn ctermbg=0 guibg=lightgrey        
 
@@ -53,14 +57,16 @@ Plug 'junegunn/limelight.vim'
 Plug 'mhinz/vim-startify'            " A start menu for vim
 Plug 'fisadev/vim-isort'             " Python sort impcrts [dep]: pip3 install isort
 Plug 'easymotion/vim-easymotion'
+Plug 'tpope/vim-repeat'
 Plug 'airblade/vim-gitgutter'        " shows git changes in gutter
 Plug 'goerz/jupytext.vim'
 Plug 'untitled-ai/jupyter_ascending.vim'
 Plug 'airblade/vim-rooter'
+Plug 'puremourning/vimspector'
 call plug#end()
 
 colorscheme gruvbox
-set background=dark
+set background=dark  
 set cursorline
 
 if executable('rg')
@@ -99,7 +105,7 @@ let maplocalleader = "\\"
 
 " vim-rooter: what pattern to use to find the root project directory:
 " to specify the root has a certain directory or file (which may be a glob), just give the name:
-let g:rooter_patterns = ['env/']
+let g:rooter_patterns = ['venv/']
 
 "easy escape in normal
 inoremap jk <Esc>
@@ -115,6 +121,8 @@ nnoremap <leader>sv :source ~/.vimrc<cr>
 
 " Minimal but useful vimrc example (directly from https://github.com/easymotion/vim-easymotion):
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
+" Turn on case-insensitive feature
+" let g:EasyMotion_smartcase = 1
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
 " `s{char}{label}`
 nmap s <Plug>(easymotion-overwin-f)
@@ -122,18 +130,26 @@ nmap s <Plug>(easymotion-overwin-f)
 " `s{char}{char}{label}`
 " Need one more keystroke, but on average, it may be more comfortable.
 " nmap s <Plug>(easymotion-overwin-f2)
-" Turn on case-insensitive feature
-let g:EasyMotion_smartcase = 1
 " JK motions: Line motions
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
+" Require tpope/vim-repeat to enable dot repeat support
+" Bidirectional & within line 't' motion
+omap t <Plug>(easymotion-bd-tl)
+" Use uppercase target labels and type as a lower case
+let g:EasyMotion_use_upper = 1
+ " type `l` and match `l`&`L`
+let g:EasyMotion_smartcase = 1
+" Smartsign (type `3` and match `3`&`#`)
+let g:EasyMotion_use_smartsign_us = 1
 
 " jupytext.vim options
 let g:jupytext_fmt = 'py:percent'
 
 " jupyter_ascending
-nmap <space>x :w<CR><Plug>JupyterExecute:/# %%<CR>
-imap <space>x <Esc>:w<CR><Plug>JupyterExecute:/# %%<CR>
+" nmap <space>x :w<CR><Plug>JupyterExecute:/# %%<CR>
+" imap <space>x <Esc>:w<CR><Plug>JupyterExecute:/# %%<CR>
+" let g:jupyter_ascending_match_pattern = '_sync.py'
 
 ""disable arrow keys in non-insert mode 
 "" actually changed them to resize split windows
