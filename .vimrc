@@ -107,6 +107,10 @@ let maplocalleader = "\\"
 " to specify the root has a certain directory or file (which may be a glob), just give the name:
 let g:rooter_patterns = ['venv/']
 
+" easy save
+" nnoremap <c-s> :w<CR>
+" inoremap <c-s> <Esc>:w<CR>a
+
 "easy escape in normal
 inoremap jk <Esc>
 "similar thing in terminal mode
