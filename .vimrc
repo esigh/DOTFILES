@@ -29,7 +29,7 @@ highlight ColorColumn ctermbg=0 guibg=lightgrey
 
 call plug#begin('~/.vim/plugged')
 Plug 'szw/vim-maximizer'
-Plug 'tpope/vim-surround'
+" Plug 'tpope/vim-surround'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'davidhalter/jedi-vim'
 Plug 'liuchengxu/vista.vim' 
@@ -121,27 +121,27 @@ nnoremap <leader>sv :source ~/.vimrc<cr>
 
 " Minimal but useful vimrc example (directly from https://github.com/easymotion/vim-easymotion):
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
-" Turn on case-insensitive feature
-" let g:EasyMotion_smartcase = 1
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
-nmap s <Plug>(easymotion-overwin-f)
-" or
-" `s{char}{char}{label}`
-" Need one more keystroke, but on average, it may be more comfortable.
-" nmap s <Plug>(easymotion-overwin-f2)
-" JK motions: Line motions
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
-" Require tpope/vim-repeat to enable dot repeat support
-" Bidirectional & within line 't' motion
-omap t <Plug>(easymotion-bd-tl)
 " Use uppercase target labels and type as a lower case
 let g:EasyMotion_use_upper = 1
  " type `l` and match `l`&`L`
 let g:EasyMotion_smartcase = 1
 " Smartsign (type `3` and match `3`&`#`)
 let g:EasyMotion_use_smartsign_us = 1
+" Turn on case-insensitive feature
+" let g:EasyMotion_smartcase = 1
+" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+" `s{char}{label}`
+nmap s <Plug>(easymotion-s)
+" or
+" `s{char}{char}{label}`
+" Need one more keystroke, but on average, it may be more comfortable.
+" nmap s <Plug>(easymotion-overwin-f2)
+" JK motions: Line motions
+" map <Leader>j <Plug>(easymotion-j)
+" map <Leader>k <Plug>(easymotion-k)
+" Require tpope/vim-repeat to enable dot repeat support
+" Bidirectional & within line 't' motion
+omap t <Plug>(easymotion-bd-tl)
 
 " jupytext.vim options
 let g:jupytext_fmt = 'py:percent'
