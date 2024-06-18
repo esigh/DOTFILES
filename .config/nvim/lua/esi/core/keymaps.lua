@@ -1,4 +1,5 @@
 vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
 
 local keymap = vim.keymap
 
@@ -34,3 +35,11 @@ keymap.set("n", "<leader>gfc", "<cmd>Telescope git_bcommits<cr>") -- list git co
 keymap.set("n", "<leader>gb", "<cmd>Telescope git_branches<cr>") -- list git branches (use <cr> to checkout) ["gb" for git branch]
 keymap.set("n", "<leader>gs", "<cmd>Telescope git_status<cr>") -- list current changes per file with diff preview ["gs" for git status]
 
+ -- let cmdline_map_start          = '<LocalLeader>s'
+ -- let cmdline_map_send           = '<Space>'
+ -- let cmdline_map_send_and_stay  = '<LocalLeader><Space>'
+ -- let cmdline_map_source_fun     = '<LocalLeader>f'
+ -- let cmdline_map_send_paragraph = '<LocalLeader>p'
+ -- let cmdline_map_send_block     = '<LocalLeader>b'
+ -- let cmdline_map_send_motion    = '<LocalLeader>m'
+ -- let cmdline_map_quit           = '<LocalLeader>q'

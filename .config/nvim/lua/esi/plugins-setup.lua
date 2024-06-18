@@ -54,7 +54,7 @@ return packer.startup(function(use)
     requires = {
       'nvim-tree/nvim-web-devicons', -- optional, for file icons
     },
-    tag = 'nightly' -- optional, updated every week. (see issue #1193)
+    -- tag = 'nightly' -- optional, updated every week. (see issue #1193)
   }
 
   -- statusline
@@ -76,6 +76,8 @@ return packer.startup(function(use)
   })
 
   use({ "iamcco/markdown-preview.nvim", run = "cd app && npm install", setup = function() vim.g.mkdp_filetypes = { "markdown" } end, ft = { "markdown" }, })
+
+  use("jalvesaq/vimcmdline")
 
   if packer_bootstrap then
     require("packer").sync()
