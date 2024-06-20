@@ -1,7 +1,6 @@
--- vim.g.cmdline_term_height = 15
--- vim.g.cmdline_in_buffer = 0
--- vim.cmd('let g:cmdline_app = {"python": "ipython --no-autoindent"}')
--- -- vim.g.cmdline_app = {"python": "ipython --no-autoindent"}
--- vim.g.cmdline_tmux_conf = "~/vimcmdline_tmux.conf"
--- vim.g.cmdline_app           = {}
--- vim.g.cmdline_app['python']     = 'ipython'
+vim.cmd("let cmdline_term_height = 15")
+vim.cmd("let g:cmdline_in_buffer = 0")
+vim.cmd("let g:cmdline_app = {'python': 'ipython --no-autoindent'}")
+vim.cmd("let cmdline_tmux_conf = '~/vimcmdline_tmux.conf'")
+vim.cmd("let cmdline_app           = {}")
+vim.cmd("let cmdline_app['python']     = 'ipython'")
