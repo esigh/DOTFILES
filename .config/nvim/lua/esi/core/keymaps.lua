@@ -7,6 +7,8 @@ local keymap = vim.keymap
 
 keymap.set("i", "jk", "<ESC>")
 
+keymap.set("t", "jk", "<C-\\><C-n>")
+
 keymap.set("n", "<leader>nh", ":nohl<CR>")
 
 keymap.set("n", "x", '"_x"')
